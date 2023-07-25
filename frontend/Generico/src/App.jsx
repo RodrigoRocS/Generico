@@ -1,18 +1,22 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import './App.css'
-import Login from './pages/Login'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import './App.css';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Login from './pages/Login';
+import Cadastro from './pages/Cadastro';
 
 function App() {
-
   return (
     <BrowserRouter>
-    <Routes>
-        <Route>
-            <Route path="/" element={<Login />} />
-        </Route>
-    </Routes>
-</BrowserRouter>
-  )
+      <Header />
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
+
