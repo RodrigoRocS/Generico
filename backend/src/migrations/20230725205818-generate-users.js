@@ -9,7 +9,7 @@ module.exports = {
       autoIncrement: true,
       primaryKey: true,
     },
-    name: {
+    user_name: {
       type: Sequelize.STRING,
       allowNull: false,
     },
@@ -20,6 +20,14 @@ module.exports = {
     },
     password: {
       type: Sequelize.STRING,
+      allowNull: false,
+    },
+    created_at: {
+      type: Sequelize.DATE,
+      allowNull: false,
+    },
+    updated_at: {
+      type: Sequelize.DATE,
       allowNull: false,
     },
    })

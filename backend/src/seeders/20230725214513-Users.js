@@ -3,15 +3,19 @@ module.exports = {
     await queryInterface.bulkInsert('users',
       [{
         id: 1,
-        display_name: 'Lewis Hamilton',
-        email: 'lewishamilton@gmail.com',
+        user_name: 'Teste',
+        email: 'teste@teste.com',
         password: '123456',
+        created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: 2,
-        display_name: 'Michael Schumacher',
+        user_name: 'Michael Schumacher',
         email: 'MichaelSchumacher@gmail.com',
         password: '123456',
+        created_at: new Date(),
+        updated_at: new Date(),
       },
       ]);
   },

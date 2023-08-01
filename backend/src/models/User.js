@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    name: {
+    userName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     tableName: 'users',
     underscored: true,
+    timestamps: true,
   });
   
   return User;

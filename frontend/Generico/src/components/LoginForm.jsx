@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -12,10 +13,16 @@ const LoginForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Lógica para enviar os dados do formulário para o backend
-    console.log('Dados do formulário:', formData);
+    try {
+      const response = await axios.post('http://localhost:3001/login', formData);
+      const { token } = response.data;
+      console.log(token);
+      localStorage.setItem('Token', token);
+    } catch (error) {
+      console.error(error)
+    }
   };
 
   return (
@@ -42,7 +49,7 @@ const LoginForm = () => {
           placeholder='Senha:'
         />
       </div>
-      <button type="submit" >Entrar</button>
+      <button type="submit">Entrar</button>
       <p>Não possui uma conta? <Link to="/cadastro">Cadastre-se aqui</Link></p>
     </form>
   );
