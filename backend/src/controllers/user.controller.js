@@ -1,16 +1,13 @@
 const { UserService } = require("../services");
-const { createToken } = require("../auth/authtentication");
 
 const createUser = async (req, res) => {
   try {
     const { userName, email, password } = req.body;
 
-    await UserService.createUser({ userName, email, password });
+    const { status, data } = await UserService.createUser({ userName, email, password });
 
-    const payload = { data: { userName, password } };
-    const token = createToken(payload);
 
-    return res.status(201).json({ token });
+    return res.status(status).json(data);
   } catch (err) {
     return res
       .status(500)
