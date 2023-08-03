@@ -11,7 +11,7 @@ const getAllUsers = () =>
 const getByEmail = (email) =>
   User.findOne({
     where: { email },
-    attributes: { exclude: ['password'] }
+    // attributes: { exclude: ['password'] }
   });
 
 const getById = (id) => User.findByPk(id);
