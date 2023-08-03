@@ -1,65 +1,140 @@
 import { useState } from "react";
+import axios from "axios";
+import {
+  Button,
+  CircularProgress,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { CustomPaper, FormContainer } from "../styles/LoginForm";
 
-const validateEmail = (email) => {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(email);
-};
-
-const SignupForm = () => {
+function SignUpForm() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
+    userName: "",
+    email: "",
+    password: "",
   });
 
-  const isValid = validateEmail(formData.email) && formData.password.length > 0 && formData.name.length > 3;
+  const [showPassword, setShowPassword] = useState(false);
+  const [invalidSignIn, setInvalidSignIn] = useState(false);
+  const [successSignIn, setSuccessSignIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiResponse, setApiResponse] = useState("");
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Lógica para enviar os dados do formulário para o backend (cadastro de usuário)
-    console.log('Dados do formulário:', formData);
+    try {
+      setIsLoading(true);
+      setInvalidSignIn(false);
+      const response = await axios.put("http://localhost:3001/user", formData);
+      setApiResponse(response.data.message);
+      setSuccessSignIn(true)
+    } catch (error) {
+      console.error(error.response.data);
+      setInvalidSignIn(true);
+      setApiResponse(error.response.data.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+  const isValidPassword = formData.password.length >= 6;
+  const isValidName = formData.userName.length >= 3;
+
+  const emailErrorText =
+    !isValidEmail && formData.email ? "Digite um email válido" : "";
+  const passwordErrorText =
+    !isValidPassword && formData.password
+      ? "A senha deve ter pelo menos 6 caracteres"
+      : "";
+  const nameErrorText =
+    !isValidName && formData.userName
+      ? "O nome deve ter pelo menos 3 caracteres"
+      : "";
+
+  const isFormValid = isValidEmail && isValidPassword && isValidName;
+
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="name">Nome:</label>
-        <input
+    <FormContainer onSubmit={handleSubmit}>
+      <CustomPaper elevation={7}>
+        <Typography
+          variant="h1"
+          gutterBottom
+        >
+          Sign Up
+        </Typography>
+        <TextField
           type="text"
-          id="name"
-          name="name"
-          value={formData.name}
+          id="userName"
+          name="userName"
+          value={formData.userName}
           onChange={handleInputChange}
+          label="Nome:"
+          variant="standard"
+          fullWidth
+          error={!!nameErrorText}
+          helperText={nameErrorText}
         />
-      </div>
-      <div>
-        <label htmlFor="email">E-mail:</label>
-        <input
+
+        <TextField
           type="email"
           id="email"
           name="email"
           value={formData.email}
           onChange={handleInputChange}
+          label="Email:"
+          variant="standard"
+          fullWidth
+          error={!!emailErrorText}
+          helperText={emailErrorText}
         />
-      </div>
-      <div>
-        <label htmlFor="password">Senha:</label>
-        <input
-          type="password"
+
+        <TextField
+          type={showPassword ? "text" : "password"}
           id="password"
           name="password"
           value={formData.password}
           onChange={handleInputChange}
+          label="Senha:"
+          variant="standard"
+          autoComplete="current-password"
+          fullWidth
+          error={!!passwordErrorText}
+          helperText={passwordErrorText}
+          InputProps={{
+            endAdornment: (
+              <IconButton
+                onClick={() =>
+                  setShowPassword((prevShowPassword) => !prevShowPassword)
+                }
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            ),
+          }}
         />
-      </div>
-      <button type="submit" disabled={!isValid}>Cadastrar</button>
-    </form>
+        <Button
+          type="submit"
+          variant="outlined"
+          disabled={!isFormValid || isLoading}
+          fullWidth
+        >
+          {isLoading ? <CircularProgress size={24} /> : "Cadastrar"}
+        </Button>
+        {invalidSignIn && <p style={{color: 'red'}}>{apiResponse}</p>}
+        {successSignIn && <p style={{color: 'green'}}>{apiResponse}</p>}
+      </CustomPaper>
+    </FormContainer>
   );
-};
+}
 
-export default SignupForm;
+export default SignUpForm;

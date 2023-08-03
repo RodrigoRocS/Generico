@@ -1,18 +1,19 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { Button, IconButton, Link, TextField, Typography } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { CustomPaper, FormContainer } from '../styles/LoginForm';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Button, CircularProgress, IconButton, Link, TextField, Typography } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { CustomPaper, FormContainer } from "../styles/LoginForm";
 
 function LoginForm() {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const [invalidLogin, setInvalidLogin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -24,30 +25,43 @@ function LoginForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3001/login', formData);
+      setIsLoading(true);
+      const response = await axios.post(
+        "http://localhost:3001/login",
+        formData
+      );
       const { token } = response.data;
-      localStorage.setItem('Token', token);
+      localStorage.setItem("Token", token);
       if (token) {
-        navigate('/');
+        navigate("/");
       }
     } catch (error) {
       console.error(error);
       setInvalidLogin(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
   const isValidPassword = formData.password.length >= 6;
 
-  const emailErrorText = !isValidEmail && formData.email ? 'Digite um email válido' : '';
-  const passwordErrorText = !isValidPassword && formData.password ? 'A senha deve ter pelo menos 6 caracteres' : '';
+  const emailErrorText =
+    !isValidEmail && formData.email ? "Digite um email válido" : "";
+  const passwordErrorText =
+    !isValidPassword && formData.password
+      ? "A senha deve ter pelo menos 6 caracteres"
+      : "";
 
   const isFormValid = isValidEmail && isValidPassword;
 
   return (
     <FormContainer onSubmit={handleSubmit}>
       <CustomPaper elevation={7}>
-        <Typography variant="h1" gutterBottom>
+        <Typography
+          variant="h1"
+          gutterBottom
+        >
           Sign In
         </Typography>
         <TextField
@@ -61,25 +75,26 @@ function LoginForm() {
           fullWidth
           error={!!emailErrorText}
           helperText={emailErrorText}
-
         />
 
         <TextField
-          type={showPassword ? 'text' : 'password'}
+          type={showPassword ? "text" : "password"}
           id="password"
           name="password"
           value={formData.password}
           onChange={handleInputChange}
           label="Senha:"
-          variant='standard'
+          variant="standard"
           autoComplete="current-password"
           fullWidth
           error={!!passwordErrorText}
-          helperText={passwordErrorText} 
+          helperText={passwordErrorText}
           InputProps={{
             endAdornment: (
               <IconButton
-                onClick={() => setShowPassword((prevShowPassword) => !prevShowPassword)}
+                onClick={() =>
+                  setShowPassword((prevShowPassword) => !prevShowPassword)
+                }
                 edge="end"
               >
                 {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -87,13 +102,24 @@ function LoginForm() {
             ),
           }}
         />
-      <Button variant="outlined" type="submit" disabled={!isFormValid}>
-        Entrar
-      </Button>
-      {invalidLogin && <p>Email ou senha inválidos!</p>}
-      <p>
-        Não possui uma conta? <Link href="/cadastro" underline='none'>Cadastre-se aqui!</Link>
-      </p>
+        <Button
+          type="submit"
+          variant="outlined"
+          disabled={!isFormValid || isLoading}
+          fullWidth
+        >
+          {isLoading ? <CircularProgress size={24} /> : "Entrar"}
+        </Button>
+        {invalidLogin && <p>Email ou senha inválidos!</p>}
+        <p>
+          Não possui uma conta?{" "}
+          <Link
+            href="/cadastro"
+            underline="none"
+          >
+            Cadastre-se aqui!
+          </Link>
+        </p>
       </CustomPaper>
     </FormContainer>
   );

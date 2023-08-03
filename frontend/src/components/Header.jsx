@@ -1,22 +1,26 @@
-import PropTypes from 'prop-types';
-import { IconButton, Link } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Link, Typography } from '@mui/material';
 import { Brightness4, Brightness7 } from '@mui/icons-material';
+import { useContext } from 'react';
+import GeneralContext from '../contexts/GeneralContext';
 
-const Header = ({ isDarkMode, onThemeToggle }) => {
+const Header = () => {
+
+  const { isDarkMode, handleThemeToggle } = useContext(GeneralContext)
 
   return (
-    <header>
-      <Link href="/" underline='none'>Home</Link>
-      <IconButton onClick={onThemeToggle}>
-        {isDarkMode ? <Brightness7 /> : <Brightness4 />}
-      </IconButton>
-    </header>
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Link href="/" underline="none" color="inherit">
+            Home
+          </Link>
+        </Typography>
+        <IconButton color="inherit" onClick={handleThemeToggle}>
+          {isDarkMode ? <Brightness7 /> : <Brightness4 />}
+        </IconButton>
+      </Toolbar>
+    </AppBar>
   );
-};
-
-Header.propTypes = {
-  isDarkMode: PropTypes.bool.isRequired,
-  onThemeToggle: PropTypes.func.isRequired,
 };
 
 export default Header;
