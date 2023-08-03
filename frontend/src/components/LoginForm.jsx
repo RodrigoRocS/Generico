@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Button, IconButton, TextField, Typography } from '@mui/material';
+import { Button, IconButton, Link, TextField, Typography } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { FormContainer } from '../styles/LoginForm';
+import { CustomPaper, FormContainer } from '../styles/LoginForm';
 
 function LoginForm() {
   const [formData, setFormData] = useState({
@@ -46,7 +46,7 @@ function LoginForm() {
 
   return (
     <FormContainer onSubmit={handleSubmit}>
-      <div>
+      <CustomPaper elevation={7}>
         <Typography variant="h1" gutterBottom>
           Sign In
         </Typography>
@@ -57,13 +57,13 @@ function LoginForm() {
           value={formData.email}
           onChange={handleInputChange}
           label="Email:"
-          variant="outlined"
+          variant="standard"
           fullWidth
           error={!!emailErrorText}
           helperText={emailErrorText}
+
         />
-      </div>
-      <div>
+
         <TextField
           type={showPassword ? 'text' : 'password'}
           id="password"
@@ -71,6 +71,7 @@ function LoginForm() {
           value={formData.password}
           onChange={handleInputChange}
           label="Senha:"
+          variant='standard'
           autoComplete="current-password"
           fullWidth
           error={!!passwordErrorText}
@@ -86,14 +87,14 @@ function LoginForm() {
             ),
           }}
         />
-      </div>
       <Button variant="outlined" type="submit" disabled={!isFormValid}>
         Entrar
       </Button>
       {invalidLogin && <p>Email ou senha inválidos!</p>}
       <p>
-        Não possui uma conta? <Link to="/cadastro">Cadastre-se aqui</Link>
+        Não possui uma conta? <Link href="/cadastro" underline='none'>Cadastre-se aqui!</Link>
       </p>
+      </CustomPaper>
     </FormContainer>
   );
 }
