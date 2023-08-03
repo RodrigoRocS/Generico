@@ -1,0 +1,31 @@
+{
+  "name": "generico",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RodrigoRocS/Generico.git"
+  },
+  "author": "Rodrigo Rocha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RodrigoRocS/Generico/issues"
+  },
+  "homepage": "https://github.com/RodrigoRocS/Generico#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "16.0",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.1",
+    "mysql2": "^3.5.2",
+    "sequelize": "^6.32.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "sequelize-cli": "6.2.0"
+  }
+}
